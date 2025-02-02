@@ -13,3 +13,6 @@ start-server:
 
 stop-server:
 	docker rm -f keycloak || true
+
+logs:
+	docker logs -f keycloak
