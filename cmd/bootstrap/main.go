@@ -3,16 +3,18 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/Nerzal/gocloak/v13"
-	keycloak "github.com/egandro/keycloak-demo/pkg"
+	"github.com/egandro/keycloak-demo/pkg/keycloak"
+	"github.com/egandro/keycloak-demo/pkg/tools"
 )
 
 
 func main() {
 	ctx := context.Background()
 
-	k := keycloak.NewClient(ctx, "http://localhost:8080")
+	url:= "http://localhost:8080"
 
 	realm := "master"
 	bootstrapAdmin := "admin"
@@ -20,11 +22,17 @@ func main() {
 
 	admin := "CoolGuy"
 	adminPassword := "Secret!123"
-
-
 	adminGroup := "admin"
 
-	err := k.LoginAdmin(bootstrapAdmin,bootstrapAdminPassword, realm)
+	err := tools.WaitForURL(url, 10, 10*time.Second)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	k := keycloak.NewClient(ctx, url)
+
+	err = k.LoginAdmin(bootstrapAdmin,bootstrapAdminPassword, realm)
 	if err != nil {
 		fmt.Println(err)
 		return
